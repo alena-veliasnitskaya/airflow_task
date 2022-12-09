@@ -1,0 +1,11 @@
+#Топ-5 известных комментариев;
+find({}).sort({thumbsUpCount : -1}).limit(5)
+
+#Все записи, где длина поля “content” составляет менее 5 символов;
+find({$expr: { $lt: [{ $strLenCP: '$content' }, 5] }})
+
+#Средний рейтинг по каждому дню (результат должен быть в виде timestamp type).
+$group:{
+    "_id": { "$dateToString": { "format": "%Y-%m-%d", "date": "$at" } },
+    "average_score": { "$avg": "$score" }
+  }
