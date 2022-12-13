@@ -87,13 +87,15 @@ def remove_emojis(**context):
 
 def uploadtomongo(**context):
     collection_data = context.get('ti').xcom_pull(key='df2')
+    new_df = pd.DataFrame.from_dict(collection_data)
+    df2 = new_df.to_json(orient='records')
     try:
         hook = MongoHook(mongo_conn_id='mongo_default')
         client = hook.get_conn()
         mydb = client.admin
         print(f"Connected to MongoDB - {client.server_info()}")
         mycol = mydb["new_col"]
-        data = mycol.insert_many(collection_data)
+        data = mycol.insert_many(df2)
     except Exception as e:
         print(f"Error connecting to MongoDB -- {e}")
 
